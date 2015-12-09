@@ -1754,8 +1754,8 @@ public class BridgeTest extends ActiveMQTestBase {
    protected Map<Long, AtomicInteger> loadQueues(ActiveMQServer serverToInvestigate) throws Exception {
       SequentialFileFactory messagesFF = new NIOSequentialFileFactory(serverToInvestigate.getConfiguration().getJournalLocation(), 1);
 
-      JournalImpl messagesJournal = new JournalImpl(serverToInvestigate.getConfiguration().getJournalFileSize(), serverToInvestigate.getConfiguration().getJournalMinFiles(), 0, 0, messagesFF, "activemq-data", "amq", 1);
-      List<RecordInfo> records = new LinkedList<RecordInfo>();
+      JournalImpl messagesJournal = new JournalImpl(serverToInvestigate.getConfiguration().getJournalFileSize(), serverToInvestigate.getConfiguration().getJournalMinFiles(), serverToInvestigate.getConfiguration().getJournalPoolSize(), 0, 0, messagesFF, "activemq-data", "amq", 1);
+      List<RecordInfo> records = new LinkedList<>();
 
       List<PreparedTransactionInfo> preparedTransactions = new LinkedList<PreparedTransactionInfo>();
 

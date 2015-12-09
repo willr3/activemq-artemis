@@ -214,17 +214,19 @@ public class JournalImpl extends JournalBase implements TestableJournal, Journal
 
    public JournalImpl(final int fileSize,
                       final int minFiles,
+                      final int poolSize,
                       final int compactMinFiles,
                       final int compactPercentage,
                       final SequentialFileFactory fileFactory,
                       final String filePrefix,
                       final String fileExtension,
                       final int maxAIO) {
-      this(fileSize, minFiles, compactMinFiles, compactPercentage, fileFactory, filePrefix, fileExtension, maxAIO, 0);
+      this(fileSize, minFiles, poolSize, compactMinFiles, compactPercentage, fileFactory, filePrefix, fileExtension, maxAIO, 0);
    }
 
    public JournalImpl(final int fileSize,
                       final int minFiles,
+                      final int poolSize,
                       final int compactMinFiles,
                       final int compactPercentage,
                       final SequentialFileFactory fileFactory,
@@ -256,7 +258,8 @@ public class JournalImpl extends JournalBase implements TestableJournal, Journal
 
       this.fileFactory = fileFactory;
 
-      filesRepository = new JournalFilesRepository(fileFactory, this, filePrefix, fileExtension, userVersion, maxAIO, fileSize, minFiles);
+      filesRepository = new JournalFilesRepository(fileFactory, this, filePrefix, fileExtension, userVersion,
+                                                   maxAIO, fileSize, minFiles, poolSize);
 
       this.userVersion = userVersion;
    }

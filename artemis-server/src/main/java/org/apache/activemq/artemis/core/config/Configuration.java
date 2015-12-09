@@ -545,6 +545,13 @@ public interface Configuration {
     */
    Configuration setJournalCompactMinFiles(int minFiles);
 
+   /** Number of files that would be acceptable to keep on a pool. Default value is {@link org.apache.activemq.artemis.api.config.ActiveMQDefaultConfiguration#DEFAULT_JOURNAL_POOL_SIZE}.*/
+   int getJournalPoolSize();
+
+   /** Number of files that would be acceptable to keep on a pool. Default value is {@link org.apache.activemq.artemis.api.config.ActiveMQDefaultConfiguration#DEFAULT_JOURNAL_POOL_SIZE}.*/
+   Configuration setJournalPoolSize(int poolSize);
+
+
    /**
     * Returns the percentage of live data before compacting the journal. <br>
     * Default value is {@link org.apache.activemq.artemis.api.config.ActiveMQDefaultConfiguration#DEFAULT_JOURNAL_COMPACT_PERCENTAGE}.

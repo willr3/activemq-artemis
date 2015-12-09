@@ -136,7 +136,7 @@ public abstract class JournalImplTestBase extends ActiveMQTestBase {
    }
 
    public void createJournal() throws Exception {
-      journal = new JournalImpl(fileSize, minFiles, 0, 0, fileFactory, filePrefix, fileExtension, maxAIO) {
+      journal = new JournalImpl(fileSize, minFiles, minFiles, 0, 0, fileFactory, filePrefix, fileExtension, maxAIO) {
          @Override
          public void onCompactDone() {
             latchDone.countDown();

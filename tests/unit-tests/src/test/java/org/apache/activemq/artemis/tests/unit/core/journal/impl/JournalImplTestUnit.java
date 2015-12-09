@@ -120,7 +120,7 @@ public abstract class JournalImplTestUnit extends JournalImplTestBase {
    @Test
    public void testParams() throws Exception {
       try {
-         new JournalImpl(JournalImpl.MIN_FILE_SIZE - 1, 10, 0, 0, fileFactory, filePrefix, fileExtension, 1);
+         new JournalImpl(JournalImpl.MIN_FILE_SIZE - 1, 10, 10, 0, 0, fileFactory, filePrefix, fileExtension, 1);
 
          Assert.fail("Should throw exception");
       }
@@ -129,7 +129,7 @@ public abstract class JournalImplTestUnit extends JournalImplTestBase {
       }
 
       try {
-         new JournalImpl(10 * 1024, 1, 0, 0, fileFactory, filePrefix, fileExtension, 1);
+         new JournalImpl(10 * 1024, 1, 0, 0, 0, fileFactory, filePrefix, fileExtension, 1);
 
          Assert.fail("Should throw exception");
       }
@@ -138,7 +138,7 @@ public abstract class JournalImplTestUnit extends JournalImplTestBase {
       }
 
       try {
-         new JournalImpl(10 * 1024, 10, 0, 0, null, filePrefix, fileExtension, 1);
+         new JournalImpl(10 * 1024, 10, 0, 0, 0, null, filePrefix, fileExtension, 1);
 
          Assert.fail("Should throw exception");
       }
@@ -147,7 +147,7 @@ public abstract class JournalImplTestUnit extends JournalImplTestBase {
       }
 
       try {
-         new JournalImpl(10 * 1024, 10, 0, 0, fileFactory, null, fileExtension, 1);
+         new JournalImpl(10 * 1024, 10, 0, 0, 0, fileFactory, null, fileExtension, 1);
 
          Assert.fail("Should throw exception");
       }
@@ -156,7 +156,7 @@ public abstract class JournalImplTestUnit extends JournalImplTestBase {
       }
 
       try {
-         new JournalImpl(10 * 1024, 10, 0, 0, fileFactory, filePrefix, null, 1);
+         new JournalImpl(10 * 1024, 10, 0, 0, 0, fileFactory, filePrefix, null, 1);
 
          Assert.fail("Should throw exception");
       }
@@ -165,7 +165,7 @@ public abstract class JournalImplTestUnit extends JournalImplTestBase {
       }
 
       try {
-         new JournalImpl(10 * 1024, 10, 0, 0, fileFactory, filePrefix, null, 0);
+         new JournalImpl(10 * 1024, 10, 0, 0, 0, fileFactory, filePrefix, null, 0);
 
          Assert.fail("Should throw exception");
       }
