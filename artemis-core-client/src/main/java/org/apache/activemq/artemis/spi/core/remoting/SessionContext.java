@@ -267,4 +267,6 @@ public abstract class SessionContext {
    public abstract void cleanup();
 
    public abstract void linkFlowControl(SimpleString address, ClientProducerCreditsImpl clientProducerCredits);
+
+   public abstract boolean isWritable(ReadyListener callback);
 }

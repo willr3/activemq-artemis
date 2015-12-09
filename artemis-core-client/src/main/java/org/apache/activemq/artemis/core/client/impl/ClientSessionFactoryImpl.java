@@ -147,8 +147,6 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
 
    private String liveNodeID;
 
-   private Set<ConnectionLifeCycleListener> lifeCycleListeners;
-
    // We need to cache this value here since some listeners may be registered after connectionReadyForWrites was called.
    private boolean connectionReadyForWrites;
 
@@ -221,8 +219,6 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
 
       confirmationWindowWarning = new ConfirmationWindowWarning(serverLocator.getConfirmationWindowSize() < 0);
 
-      lifeCycleListeners = new HashSet<ConnectionLifeCycleListener>();
-
       connectionReadyForWrites = true;
    }
 
@@ -236,13 +232,6 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
    }
 
    @Override
-   public void addLifeCycleListener(ConnectionLifeCycleListener lifeCycleListener) {
-      synchronized (connectionReadyLock) {
-         lifeCycleListener.connectionReadyForWrites(connection.getTransportConnection().getID(), connectionReadyForWrites);
-         lifeCycleListeners.add(lifeCycleListener);
-      }
-   }
-
    public void connect(final int initialConnectAttempts,
                        final boolean failoverOnInitialConnection) throws ActiveMQException {
       // Get the connection
@@ -374,14 +363,6 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
    }
 
    public void connectionReadyForWrites(final Object connectionID, final boolean ready) {
-      synchronized (connectionReadyLock) {
-         if (connectionReadyForWrites != ready) {
-            connectionReadyForWrites = ready;
-            for (ConnectionLifeCycleListener lifeCycleListener : lifeCycleListeners) {
-               lifeCycleListener.connectionReadyForWrites(connectionID, ready);
-            }
-         }
-      }
    }
 
    public synchronized int numConnections() {

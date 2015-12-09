@@ -668,6 +668,8 @@ public class NettyAcceptor implements Acceptor {
          if (conn != null) {
             conn.fireReady(ready);
          }
+
+         listener.connectionReadyForWrites(connectionID, ready);
       }
    }
 

@@ -593,6 +593,9 @@ public class ServerSessionPacketHandler implements ChannelHandler {
 
       newConnection.syncIDGeneratorSequence(remotingConnection.getIDGeneratorSequence());
 
+
+      Connection oldTransportConnection = remotingConnection.getTransportConnection();
+
       remotingConnection = newConnection;
 
       remotingConnection.setCloseListeners(closeListeners);
@@ -605,6 +608,10 @@ public class ServerSessionPacketHandler implements ChannelHandler {
       channel.setTransferring(false);
 
       session.setTransferring(false);
+
+      // We do this because the old connection could be out of credits on the old connection
+      // this will force anything to resume after the reattach
+      oldTransportConnection.fireReady(true);
 
       return serverLastReceivedCommandID;
    }

@@ -44,7 +44,7 @@ import org.junit.Test;
 
 public class SendReceiveMultiThreadTest extends ActiveMQTestBase {
 
-   final String DIRECTORY = "/test/journaltmp";
+   final String DIRECTORY = "./target/journaltmp";
 
    ConnectionFactory cf;
 

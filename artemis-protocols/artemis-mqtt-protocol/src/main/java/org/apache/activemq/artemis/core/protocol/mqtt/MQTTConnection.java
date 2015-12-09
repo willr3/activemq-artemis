@@ -28,6 +28,7 @@ import org.apache.activemq.artemis.core.remoting.CloseListener;
 import org.apache.activemq.artemis.core.remoting.FailureListener;
 import org.apache.activemq.artemis.spi.core.protocol.RemotingConnection;
 import org.apache.activemq.artemis.spi.core.remoting.Connection;
+import org.apache.activemq.artemis.spi.core.remoting.ReadyListener;
 
 public class MQTTConnection implements RemotingConnection {
 
@@ -52,6 +53,11 @@ public class MQTTConnection implements RemotingConnection {
       this.destroyed = false;
    }
 
+   public boolean isWritable(ReadyListener callback) {
+      return transportConnection.isWritable(callback);
+   }
+
+   @Override
    public Object getID() {
       return transportConnection.getID();
    }
