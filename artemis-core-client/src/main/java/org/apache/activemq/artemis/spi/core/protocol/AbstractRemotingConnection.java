@@ -187,6 +187,7 @@ public abstract class AbstractRemotingConnection implements RemotingConnection {
 
    public void bufferReceived(final Object connectionID, final ActiveMQBuffer buffer) {
       dataReceived = true;
+      buffer.byteBuf().release();
    }
 
 }

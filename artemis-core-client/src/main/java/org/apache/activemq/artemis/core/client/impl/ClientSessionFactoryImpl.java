@@ -1105,6 +1105,7 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
          }
          else {
             ActiveMQClientLogger.LOGGER.debug("TheConn == null on ClientSessionFactoryImpl::DelegatingBufferHandler, ignoring packet");
+            buffer.byteBuf().release();
          }
       }
    }

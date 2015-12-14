@@ -187,6 +187,8 @@ class StompProtocolManager implements ProtocolManager<StompFrameInterceptor>, No
             server.getStorageManager().clearContext();
          }
       } while (conn.hasBytes());
+
+      buffer.byteBuf().release();
    }
 
    @Override
