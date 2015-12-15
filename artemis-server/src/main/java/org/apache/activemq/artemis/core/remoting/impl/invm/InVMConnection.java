@@ -16,7 +16,6 @@
  */
 package org.apache.activemq.artemis.core.remoting.impl.invm;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
@@ -164,11 +163,14 @@ public class InVMConnection implements Connection {
                      final ChannelFutureListener futureListener) {
 
 
-      final ByteBuf buf= ALLOCATOR.heapBuffer(buffer.capacity());
-      buf.writeBytes(buffer.byteBuf(), 0, buffer.capacity());
-
-      final ActiveMQBuffer copied =  new ChannelBufferWrapper(buf, true);
+//      final ByteBuf buf= ALLOCATOR.heapBuffer(buffer.capacity());
+//      buf.writeBytes(buffer.byteBuf(), 0, buffer.capacity());
+//      final ActiveMQBuffer copied =  new ChannelBufferWrapper(buf, true);
+      final ActiveMQBuffer copied = buffer.copy(0,buffer.capacity());
       copied.setIndex(buffer.readerIndex(), buffer.writerIndex());
+
+      //willr3 release the bytebuf as it was created for the write
+      //move to call after invoke of write()
 
       try {
          executor.execute(new Runnable() {
@@ -195,8 +197,7 @@ public class InVMConnection implements Connection {
                   if (isTrace) {
                      ActiveMQServerLogger.LOGGER.trace(InVMConnection.this + "::packet sent done");
                   }
-                  //willr3 release the bytebuf as it was created for the write
-                  buffer.byteBuf().release();
+
                }
             }
          });

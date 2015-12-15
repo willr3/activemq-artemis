@@ -257,6 +257,9 @@ public final class ChannelImpl implements Channel {
          // The actual send must be outside the lock, or with OIO transport, the write can block if the tcp
          // buffer is full, preventing any incoming buffers being handled and blocking failover
          connection.getTransportConnection().write(buffer, flush, batch);
+         //willr3
+         ActiveMQClientLogger.LOGGER.info("ChannelImpl.conn="+connection.getTransportConnection().getClass().getName());
+         buffer.byteBuf().release();
 
          return true;
       }
@@ -318,7 +321,9 @@ public final class ChannelImpl implements Channel {
             }
 
             connection.getTransportConnection().write(buffer, false, false);
-
+            //willr3
+            ActiveMQClientLogger.LOGGER.info("ChannelImpl.conn="+connection.getTransportConnection().getClass().getName());
+            buffer.byteBuf().release();
             long toWait = connection.getBlockingCallTimeout();
 
             long start = System.currentTimeMillis();
@@ -563,8 +568,10 @@ public final class ChannelImpl implements Channel {
 
    private void doWrite(final Packet packet) {
       final ActiveMQBuffer buffer = packet.encode(connection);
-      //willr3 looks like InVMConnection.write will need to release the passed in buffer too
       connection.getTransportConnection().write(buffer, false, false);
+      //willr3
+      ActiveMQClientLogger.LOGGER.info("ChannelImpl.conn="+connection.getTransportConnection().getClass().getName());
+      buffer.byteBuf().release();
    }
 
    private void clearUpTo(final int lastReceivedCommandID) {

@@ -262,6 +262,8 @@ public class NettyConnection implements Connection {
             // depending on if we need to flush or not we can use a voidPromise or
             // use a normal promise
             final ByteBuf buf = buffer.byteBuf();
+            //willr3
+            buf.retain();
             final ChannelPromise promise;
             if (flush || futureListener != null) {
                promise = channel.newPromise();
@@ -279,6 +281,7 @@ public class NettyConnection implements Connection {
                else {
                   channel.writeAndFlush(buf, promise);
                }
+               buf.release();  //TODO willr3 should be in finally around the channel write
             }
             else {
                // create a task which will be picked up by the eventloop and trigger the write.
@@ -287,11 +290,16 @@ public class NettyConnection implements Connection {
                final Runnable task = new Runnable() {
                   @Override
                   public void run() {
-                     if (futureListener != null) {
-                        channel.writeAndFlush(buf, promise).addListener(futureListener);
+                     try {
+                        if (futureListener != null) {
+                           channel.writeAndFlush(buf, promise).addListener(futureListener);
+                        }
+                        else {
+                           channel.writeAndFlush(buf, promise);
+                        }
                      }
-                     else {
-                        channel.writeAndFlush(buf, promise);
+                     finally {
+                        buf.release();
                      }
 
                   }
