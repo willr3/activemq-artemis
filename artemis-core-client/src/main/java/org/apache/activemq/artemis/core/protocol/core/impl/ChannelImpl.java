@@ -16,15 +16,6 @@
  */
 package org.apache.activemq.artemis.core.protocol.core.impl;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.apache.activemq.artemis.api.core.ActiveMQBuffer;
 import org.apache.activemq.artemis.api.core.ActiveMQException;
 import org.apache.activemq.artemis.api.core.ActiveMQInterruptedException;
@@ -39,6 +30,15 @@ import org.apache.activemq.artemis.core.protocol.core.Packet;
 import org.apache.activemq.artemis.core.protocol.core.impl.wireformat.ActiveMQExceptionMessage;
 import org.apache.activemq.artemis.core.protocol.core.impl.wireformat.PacketsConfirmedMessage;
 import org.apache.activemq.artemis.spi.core.protocol.RemotingConnection;
+
+import java.util.EnumSet;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class ChannelImpl implements Channel {
 
@@ -563,7 +563,7 @@ public final class ChannelImpl implements Channel {
 
    private void doWrite(final Packet packet) {
       final ActiveMQBuffer buffer = packet.encode(connection);
-
+      //willr3 looks like InVMConnection.write will need to release the passed in buffer too
       connection.getTransportConnection().write(buffer, false, false);
    }
 

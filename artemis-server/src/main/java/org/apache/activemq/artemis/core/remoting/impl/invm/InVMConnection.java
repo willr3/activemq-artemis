@@ -16,18 +16,13 @@
  */
 package org.apache.activemq.artemis.core.remoting.impl.invm;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
-
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
 import org.apache.activemq.artemis.api.core.ActiveMQBuffer;
-import org.apache.activemq.artemis.api.core.ActiveMQBuffers;
 import org.apache.activemq.artemis.api.core.ActiveMQInterruptedException;
 import org.apache.activemq.artemis.api.core.TransportConfiguration;
+import org.apache.activemq.artemis.core.buffers.impl.ChannelBufferWrapper;
 import org.apache.activemq.artemis.core.security.ActiveMQPrincipal;
 import org.apache.activemq.artemis.core.server.ActiveMQServerLogger;
 import org.apache.activemq.artemis.spi.core.protocol.RemotingConnection;
@@ -37,7 +32,16 @@ import org.apache.activemq.artemis.spi.core.remoting.ConnectionLifeCycleListener
 import org.apache.activemq.artemis.spi.core.remoting.ReadyListener;
 import org.apache.activemq.artemis.utils.UUIDGenerator;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
+
 public class InVMConnection implements Connection {
+
+   private static final ByteBufAllocator ALLOCATOR = new PooledByteBufAllocator(false);
 
    private static final boolean isTrace = ActiveMQServerLogger.LOGGER.isTraceEnabled();
 
@@ -134,7 +138,8 @@ public class InVMConnection implements Connection {
    }
 
    public ActiveMQBuffer createTransportBuffer(final int size) {
-      return ActiveMQBuffers.dynamicBuffer(size);
+      //return ActiveMQBuffers.dynamicBuffer(size);
+      return new ChannelBufferWrapper(ALLOCATOR.buffer(size),true);
    }
 
    public Object getID() {
@@ -185,6 +190,8 @@ public class InVMConnection implements Connection {
                   if (isTrace) {
                      ActiveMQServerLogger.LOGGER.trace(InVMConnection.this + "::packet sent done");
                   }
+                  //release the bytebuf as it was created for the write
+                  buffer.byteBuf().release();
                }
             }
          });

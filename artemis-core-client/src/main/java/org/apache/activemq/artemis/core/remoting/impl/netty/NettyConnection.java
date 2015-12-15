@@ -16,11 +16,6 @@
  */
 package org.apache.activemq.artemis.core.remoting.impl.netty;
 
-import java.net.SocketAddress;
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.Semaphore;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -40,6 +35,11 @@ import org.apache.activemq.artemis.spi.core.remoting.Connection;
 import org.apache.activemq.artemis.spi.core.remoting.ConnectionLifeCycleListener;
 import org.apache.activemq.artemis.spi.core.remoting.ReadyListener;
 import org.apache.activemq.artemis.utils.IPV6Util;
+
+import java.net.SocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.Semaphore;
 
 public class NettyConnection implements Connection {
 
@@ -293,6 +293,7 @@ public class NettyConnection implements Connection {
                      else {
                         channel.writeAndFlush(buf, promise);
                      }
+
                   }
                };
                // execute the task on the eventloop
