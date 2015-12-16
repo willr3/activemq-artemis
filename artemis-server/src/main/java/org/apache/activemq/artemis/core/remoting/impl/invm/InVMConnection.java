@@ -16,13 +16,6 @@
  */
 package org.apache.activemq.artemis.core.remoting.impl.invm;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -40,6 +33,13 @@ import org.apache.activemq.artemis.spi.core.remoting.Connection;
 import org.apache.activemq.artemis.spi.core.remoting.ConnectionLifeCycleListener;
 import org.apache.activemq.artemis.spi.core.remoting.ReadyListener;
 import org.apache.activemq.artemis.utils.UUIDGenerator;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class InVMConnection implements Connection {
 
@@ -169,8 +169,10 @@ public class InVMConnection implements Connection {
       buf.writeBytes(buffer.byteBuf(), 0, buffer.capacity());
 
       //final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
-      buf.setIndex(buffer.readerIndex(), buffer.writerIndex());
-
+      final ActiveMQBuffer copied = new ChannelBufferWrapper(buf, true);
+      //buf.setIndex(buffer.readerIndex(), buffer.writerIndex());
+      copied.setIndex(buffer.readerIndex(),buffer.writerIndex());
+      buffer.byteBuf().release();
       try {
          executor.execute(new Runnable() {
             public void run() {
@@ -180,7 +182,7 @@ public class InVMConnection implements Connection {
                      if (isTrace) {
                         ActiveMQServerLogger.LOGGER.trace(InVMConnection.this + "::Sending inVM packet");
                      }
-                     handler.bufferReceived(id, new ChannelBufferWrapper(buf, true));
+                     handler.bufferReceived(id, copied);
                      if (futureListener != null) {
                         // TODO BEFORE MERGE: (is null a good option here?)
                         futureListener.operationComplete(null);
