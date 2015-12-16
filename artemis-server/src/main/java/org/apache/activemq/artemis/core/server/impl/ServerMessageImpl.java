@@ -16,9 +16,6 @@
  */
 package org.apache.activemq.artemis.core.server.impl;
 
-import java.io.InputStream;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.activemq.artemis.api.core.Message;
 import org.apache.activemq.artemis.api.core.SimpleString;
 import org.apache.activemq.artemis.core.message.impl.MessageImpl;
@@ -29,6 +26,9 @@ import org.apache.activemq.artemis.core.server.ServerMessage;
 import org.apache.activemq.artemis.utils.DataConstants;
 import org.apache.activemq.artemis.utils.MemorySize;
 import org.apache.activemq.artemis.utils.TypedProperties;
+
+import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerMessageImpl extends MessageImpl implements ServerMessage {
 
@@ -115,7 +115,9 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
             pagingStore.addSize(MessageReferenceImpl.getMemoryEstimate());
          }
       }
-
+      if(buffer!=null){
+         buffer.byteBuf().retain();
+      }
       return count;
    }
 
@@ -126,16 +128,16 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
          if (count == 0) {
             pagingStore.addSize(-getMemoryEstimate() - MessageReferenceImpl.getMemoryEstimate());
 
-            if (buffer != null) {
-               // release the buffer now
-               buffer.byteBuf().release();
-            }
+
          }
          else {
             pagingStore.addSize(-MessageReferenceImpl.getMemoryEstimate());
          }
       }
-
+      if (buffer != null) {
+         // release the buffer now
+         buffer.byteBuf().release();
+      }
       return count;
    }
 

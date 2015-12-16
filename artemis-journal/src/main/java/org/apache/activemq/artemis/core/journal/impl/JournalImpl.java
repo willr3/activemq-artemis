@@ -220,7 +220,7 @@ public class JournalImpl extends JournalBase implements TestableJournal, Journal
                       final String filePrefix,
                       final String fileExtension,
                       final int maxAIO) {
-      this(fileSize, minFiles, -1, compactMinFiles, compactPercentage, fileFactory, filePrefix, fileExtension, maxAIO, 0);
+      this(fileSize, minFiles, minFiles, compactMinFiles, compactPercentage, fileFactory, filePrefix, fileExtension, maxAIO, 0);
    }
 
    public JournalImpl(final int fileSize,
