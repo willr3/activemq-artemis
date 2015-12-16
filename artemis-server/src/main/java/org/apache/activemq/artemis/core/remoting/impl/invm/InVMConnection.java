@@ -20,9 +20,9 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
 import org.apache.activemq.artemis.api.core.ActiveMQBuffer;
+import org.apache.activemq.artemis.api.core.ActiveMQBuffers;
 import org.apache.activemq.artemis.api.core.ActiveMQInterruptedException;
 import org.apache.activemq.artemis.api.core.TransportConfiguration;
-import org.apache.activemq.artemis.core.buffers.impl.ChannelBufferWrapper;
 import org.apache.activemq.artemis.core.security.ActiveMQPrincipal;
 import org.apache.activemq.artemis.core.server.ActiveMQServerLogger;
 import org.apache.activemq.artemis.spi.core.protocol.RemotingConnection;
@@ -138,8 +138,8 @@ public class InVMConnection implements Connection {
    }
 
    public ActiveMQBuffer createTransportBuffer(final int size) {
-      //return ActiveMQBuffers.dynamicBuffer(size);
-      return new ChannelBufferWrapper(ALLOCATOR.buffer(size),true);
+      return ActiveMQBuffers.dynamicBuffer(size);
+      //return new ChannelBufferWrapper(ALLOCATOR.buffer(size),true);
    }
 
    public Object getID() {
