@@ -44,6 +44,9 @@ final class CompressedLargeMessageControllerImpl implements LargeMessageControll
       this.bufferDelegate = bufferDelegate;
    }
 
+   public void retain(){}
+   public void release(){}
+
    /**
     *
     */
