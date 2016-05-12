@@ -18,6 +18,8 @@ package org.apache.activemq.artemis.api.core;
 
 import java.nio.ByteBuffer;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import org.apache.activemq.artemis.core.buffers.impl.ChannelBufferWrapper;
 
@@ -25,6 +27,21 @@ import org.apache.activemq.artemis.core.buffers.impl.ChannelBufferWrapper;
  * Factory class to create instances of {@link ActiveMQBuffer}.
  */
 public final class ActiveMQBuffers {
+
+   public static class AMQBuffer extends ChannelBufferWrapper{
+
+      public AMQBuffer(final ByteBuf buffer){
+         super(buffer,true);//always releasable
+      }
+   }
+
+
+   private static final PooledByteBufAllocator POOLED_BYTE_BUF_ALLOCATOR = new PooledByteBufAllocator();
+
+
+   public static ActiveMQBuffer pooledDynamicBuffer(final int size){
+      return new AMQBuffer(POOLED_BYTE_BUF_ALLOCATOR.buffer(size));
+   }
 
    /**
     * Creates a <em>self-expanding</em> ActiveMQBuffer with the given initial size
