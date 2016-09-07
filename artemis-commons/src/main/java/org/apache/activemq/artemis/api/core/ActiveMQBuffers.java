@@ -33,6 +33,38 @@ public final class ActiveMQBuffers {
       public AMQBuffer(final ByteBuf buffer){
          super(buffer,true);//always releasable
       }
+      public AMQBuffer(final ByteBuf buffer,boolean bool){
+         super(buffer,bool);//always releasable
+      }
+
+      @Override
+      public ActiveMQBuffer copy() {
+         return new AMQBuffer(buffer.copy(), releasable);
+      }
+      @Override
+      public ActiveMQBuffer copy(final int index, final int length) {
+         return new AMQBuffer(buffer.copy(index, length), releasable);
+      }
+      @Override
+      public ActiveMQBuffer duplicate() {
+         return new AMQBuffer(buffer.duplicate(), releasable);
+      }
+      @Override
+      public ActiveMQBuffer readBytes(final int length) {
+         return new AMQBuffer(buffer.readBytes(length), releasable);
+      }
+      @Override
+      public ActiveMQBuffer readSlice(final int length) {
+         return new AMQBuffer(buffer.readSlice(length), releasable);
+      }
+      @Override
+      public ActiveMQBuffer slice() {
+         return new AMQBuffer(buffer.slice(), releasable);
+      }
+      @Override
+      public ActiveMQBuffer slice(final int index, final int length) {
+         return new AMQBuffer(buffer.slice(index, length), releasable);
+      }
    }
 
 
@@ -40,7 +72,8 @@ public final class ActiveMQBuffers {
 
 
    public static ActiveMQBuffer pooledDynamicBuffer(final int size){
-      return new AMQBuffer(POOLED_BYTE_BUF_ALLOCATOR.buffer(size));
+      //return new AMQBuffer(POOLED_BYTE_BUF_ALLOCATOR.buffer(size));
+      return new AMQBuffer(Unpooled.buffer(size));
    }
 
    /**

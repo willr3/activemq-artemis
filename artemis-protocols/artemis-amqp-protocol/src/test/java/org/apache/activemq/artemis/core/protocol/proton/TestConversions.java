@@ -239,6 +239,16 @@ public class TestConversions extends Assert {
    class EmptyBuffer implements ActiveMQBuffer {
 
       @Override
+      public void retain() {
+
+      }
+
+      @Override
+      public void release() {
+
+      }
+
+      @Override
       public ByteBuf byteBuf() {
          return null;
       }

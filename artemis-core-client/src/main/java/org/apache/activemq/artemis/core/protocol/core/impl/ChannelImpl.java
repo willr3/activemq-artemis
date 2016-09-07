@@ -309,7 +309,7 @@ public final class ChannelImpl implements Channel {
     * The expectedPacket will be used to filter out undesirable packets that would belong to previous calls.
     */
    @Override
-   public Packet sendBlocking(final Packet packet, final int reconnectID, byte expectedPacket) throws ActiveMQException {
+   public Packet I(final Packet packet, final int reconnectID, byte expectedPacket) throws ActiveMQException {
       String interceptionResult = invokeInterceptors(packet, interceptors, connection);
 
       if (interceptionResult != null) {
