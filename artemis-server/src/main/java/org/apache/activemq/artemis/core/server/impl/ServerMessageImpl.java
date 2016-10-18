@@ -71,6 +71,19 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
       this.messageID = messageID;
    }
 
+   @Override
+   public void release(){
+      if(buffer!=null){
+         buffer.release();
+      }
+   }
+   @Override
+   public void retain(){
+      if(buffer!=null){
+         buffer.retain();
+      }
+   }
+
    /*
     * Copy constructor
     */
@@ -128,7 +141,8 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
 
             if (buffer != null) {
                // release the buffer now
-               buffer.byteBuf().release();
+               buffer.release();
+               //buffer.byteBuf().release();
             }
          }
          else {

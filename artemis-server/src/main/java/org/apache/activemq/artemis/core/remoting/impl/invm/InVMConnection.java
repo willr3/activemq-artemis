@@ -156,8 +156,10 @@ public class InVMConnection implements Connection {
                      final boolean flush,
                      final boolean batch,
                      final ChannelFutureListener futureListener) {
-      //final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
-      //copied.setIndex(buffer.readerIndex(), buffer.writerIndex());
+//      final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
+//      copied.setIndex(buffer.readerIndex(), buffer.writerIndex());
+//      copied.retain();
+      
       final ActiveMQBuffer copied = buffer;
       try {
          executor.execute(new Runnable() {

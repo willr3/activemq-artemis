@@ -167,6 +167,7 @@ public abstract class MessageImpl implements MessageInternal {
       }
    }
 
+
    // Message implementation ----------------------------------------
 
    public int getEncodeSize() {

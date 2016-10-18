@@ -43,10 +43,11 @@ public class ChannelBufferWrapper implements ActiveMQBuffer {
    }
 
    public void retain(){
-      /*buffer.retain();*/
+      //buffer.retain();
    }
    public void release(){
-      /*buffer.release();*/
+      //buffer.release();
+
    }
 
    public ChannelBufferWrapper(final ByteBuf buffer) {

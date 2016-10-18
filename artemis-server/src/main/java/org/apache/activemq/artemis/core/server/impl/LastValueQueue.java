@@ -162,6 +162,10 @@ public class LastValueQueue extends QueueImpl {
          return ref;
       }
 
+      public void release(){
+         ref.getMessage().getBodyBuffer().release();
+      }
+
       public void handled() {
          ref.handled();
          // We need to remove the entry from the map just before it gets delivered

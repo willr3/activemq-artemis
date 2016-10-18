@@ -65,6 +65,16 @@ public final class ActiveMQBuffers {
       public ActiveMQBuffer slice(final int index, final int length) {
          return new AMQBuffer(buffer.slice(index, length), releasable);
       }
+      @Override
+      public void retain(){
+         buffer.retain();
+      }
+      @Override
+      public void release(){
+         //buffer.capacity();
+         buffer.release();
+
+      }
    }
 
 
@@ -72,8 +82,8 @@ public final class ActiveMQBuffers {
 
 
    public static ActiveMQBuffer pooledDynamicBuffer(final int size){
-      //return new AMQBuffer(POOLED_BYTE_BUF_ALLOCATOR.buffer(size));
-      return new AMQBuffer(Unpooled.buffer(size));
+      return new AMQBuffer(POOLED_BYTE_BUF_ALLOCATOR.buffer(size));
+      //return new AMQBuffer(Unpooled.buffer(size));
    }
 
    /**

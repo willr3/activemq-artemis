@@ -311,6 +311,15 @@ public class ScheduledDeliveryHandlerTest extends Assert {
       }
 
       @Override
+      public void release(){
+
+      }
+      @Override
+      public void retain(){
+         
+      }
+
+      @Override
       public int incrementRefCount() throws Exception {
          return 0;
       }

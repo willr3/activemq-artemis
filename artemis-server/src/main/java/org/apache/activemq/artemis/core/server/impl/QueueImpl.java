@@ -1912,6 +1912,7 @@ public class QueueImpl implements Queue {
    }
 
    protected void refRemoved(MessageReference ref) {
+      ref.release();
       queueMemorySize.addAndGet(-ref.getMessageMemoryEstimate());
       if (ref.isPaged()) {
          pagedReferences.decrementAndGet();

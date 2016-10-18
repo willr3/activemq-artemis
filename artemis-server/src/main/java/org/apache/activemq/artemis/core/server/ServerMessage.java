@@ -77,4 +77,8 @@ public interface ServerMessage extends MessageInternal, EncodingSupport {
    byte[] getDuplicateIDBytes();
 
    Object getDuplicateProperty();
+
+
+   void retain();
+   void release(); //willr3
 }

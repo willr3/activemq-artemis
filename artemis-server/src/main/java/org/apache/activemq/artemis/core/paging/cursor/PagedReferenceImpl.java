@@ -48,6 +48,10 @@ public class PagedReferenceImpl implements PagedReference {
 
    private boolean alreadyAcked;
 
+   public void release(){
+      getMessage().getBodyBuffer().release();
+   }
+
    public ServerMessage getMessage() {
       return getPagedMessage().getMessage();
    }

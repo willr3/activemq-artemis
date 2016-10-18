@@ -70,4 +70,6 @@ public interface MessageReference {
    void setAlreadyAcked();
 
    boolean isAlreadyAcked();
+
+   void release();//willr3 added for releasing underlying message buffer?
 }
