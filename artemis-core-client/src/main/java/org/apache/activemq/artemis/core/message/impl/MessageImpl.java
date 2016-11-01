@@ -909,7 +909,7 @@ public abstract class MessageImpl implements MessageInternal {
       buffer.setIndex(BODY_OFFSET, BODY_OFFSET);
    }
 
-   private void forceCopy() {
+   protected void forceCopy() {
       // Must copy buffer before sending it
 
       buffer = buffer.copy(0, buffer.capacity());

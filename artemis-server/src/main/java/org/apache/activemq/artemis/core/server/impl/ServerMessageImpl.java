@@ -19,6 +19,7 @@ package org.apache.activemq.artemis.core.server.impl;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.activemq.artemis.api.core.ActiveMQBuffer;
 import org.apache.activemq.artemis.api.core.Message;
 import org.apache.activemq.artemis.api.core.SimpleString;
 import org.apache.activemq.artemis.core.message.impl.MessageImpl;
@@ -82,6 +83,26 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
       if(buffer!=null){
          buffer.retain();
       }
+   }
+
+
+   //overrides for changes to this.buffer
+
+   @Override
+   public void decodeFromBuffer(final ActiveMQBuffer buffer) {
+      release();
+      super.decodeFromBuffer(buffer);
+   }
+   @Override
+   public void createBody(final int initialMessageBufferSize){
+      release();
+      super.createBody(initialMessageBufferSize);
+   }
+
+   @Override
+   protected void forceCopy(){
+      release();
+      super.forceCopy();
    }
 
    /*
