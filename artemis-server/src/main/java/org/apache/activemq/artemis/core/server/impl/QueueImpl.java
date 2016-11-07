@@ -1924,6 +1924,7 @@ public class QueueImpl implements Queue {
       if (ref.isPaged()) {
          pagedReferences.incrementAndGet();
       }
+      ref.retain();
    }
 
    private void scheduleDepage(final boolean scheduleExpiry) {

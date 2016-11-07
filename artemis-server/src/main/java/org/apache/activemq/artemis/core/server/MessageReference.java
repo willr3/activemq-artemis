@@ -71,5 +71,6 @@ public interface MessageReference {
 
    boolean isAlreadyAcked();
 
-   void release();//willr3 added for releasing underlying message buffer?
+   void retain();//willr3 added for retaining underlying message buffer
+   void release();//willr3 added for releasing underlying message buffer
 }

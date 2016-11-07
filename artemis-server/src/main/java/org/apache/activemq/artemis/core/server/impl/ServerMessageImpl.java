@@ -149,7 +149,7 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
             pagingStore.addSize(MessageReferenceImpl.getMemoryEstimate());
          }
       }
-
+      retain();
       return count;
    }
 
@@ -170,7 +170,7 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
             pagingStore.addSize(-MessageReferenceImpl.getMemoryEstimate());
          }
       }
-
+      release();
       return count;
    }
 

@@ -83,14 +83,12 @@ public class MessageReferenceImpl implements MessageReference {
       this.message = message;
 
       this.queue = queue;
-      retain();
+      //retain();
    }
 
-   private void retain(){
+   public void retain(){
       this.message.retain();
-
    }
-   //willr3 added because otherwise message buffers are not preserved
    public void release(){
       this.message.release();
    }
