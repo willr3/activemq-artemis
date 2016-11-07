@@ -163,7 +163,10 @@ public class LastValueQueue extends QueueImpl {
       }
 
       public void release(){
-         ref.getMessage().getBodyBuffer().release();
+         ref.release();
+      }
+      public void retain(){
+         ref.retain();
       }
 
       public void handled() {
