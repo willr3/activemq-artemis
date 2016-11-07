@@ -507,6 +507,9 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
          ActiveMQServerLogger.LOGGER.errorResttingLargeMessage(e, largeMessageDeliverer);
       }
       finally {
+         if(largeMessageDeliverer != null){ //willr3 added to release the ref that was retained by construction of LargeMessageDeliverer
+            largeMessageDeliverer.ref.release();
+         }
          largeMessageDeliverer = null;
       }
 
@@ -534,7 +537,8 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
                   ActiveMQServerLogger.LOGGER.trace("ServerConsumerImpl::" + this + " Preparing Cancelling list for messageID = " + ref.getMessage().getMessageID() + ", ref = " + ref);
                }
 
-               ref.release();//willr3 added to decrement refCnt before clear
+               //ref.release();//willr3 added to decrement refCnt before clear
+               //willr3 this can causes refCnt 0 for return refs so cannot release
             }
 
             deliveringRefs.clear();
@@ -754,6 +758,8 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
          if (startedTransaction) {
             tx.commit();
          }
+
+         ref.release(); //willr3 trying to release where ref is no longer used
       }
       catch (ActiveMQException e) {
          if (startedTransaction) {
@@ -793,7 +799,9 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
          ref.decrementDeliveryCount();
       }
 
-      ref.getQueue().cancel(ref, System.currentTimeMillis());
+      ref.getQueue().cancel(ref, System.currentTimeMillis());//willr3 does this require a retain
+
+      ref.release();
    }
 
    public MessageReference removeReferenceByID(final long messageID) throws Exception {
@@ -807,7 +815,8 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
          // This is an optimization, if the reference is the first one, we just poll it.
          if (deliveringRefs.peek().getMessage().getMessageID() == messageID) {
             MessageReference ref = deliveringRefs.poll();
-            ref.release();//willr3 added to avoid leak caused by retain in add
+            //ref.release();//willr3 added to avoid leak caused by retain in add
+            //willr3 cannot call here because need it valid from return point
             return ref;
          }
 
@@ -826,7 +835,8 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
                break;
             }
          }
-         ref.release();//willr3 added to avoid leak caused by retain in add
+         //ref.release();//willr3 added to avoid leak caused by retain in add
+         //cannot call here because need it valid from return point
          return ref;
       }
    }
@@ -954,6 +964,7 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
          largeMessage.incrementDelayDeletionCount();
 
          this.ref = ref;
+         ref.retain(); // willr3 implicit retain on ref for LargeMessageDeliverer
       }
 
       public boolean deliver() throws Exception {
