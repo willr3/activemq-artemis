@@ -307,6 +307,7 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
          if (!browseOnly) {
             if (!preAcknowledge) {
                deliveringRefs.add(ref);
+               ref.retain();//willr3 added to prevent refCnt = 0
             }
 
             ref.handled();
@@ -532,6 +533,8 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
                if (isTrace) {
                   ActiveMQServerLogger.LOGGER.trace("ServerConsumerImpl::" + this + " Preparing Cancelling list for messageID = " + ref.getMessage().getMessageID() + ", ref = " + ref);
                }
+
+               ref.release();//willr3 added to decrement refCnt before clear
             }
 
             deliveringRefs.clear();
@@ -673,6 +676,9 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
                }
                throw ils;
             }
+            else {
+               ref.release(); //willr3 added to new else block to avoid leak reference
+            }
 
             ackReference(tx, ref);
             acks++;
@@ -800,7 +806,9 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
       synchronized (lock) {
          // This is an optimization, if the reference is the first one, we just poll it.
          if (deliveringRefs.peek().getMessage().getMessageID() == messageID) {
-            return deliveringRefs.poll();
+            MessageReference ref = deliveringRefs.poll();
+            ref.release();//willr3 added to avoid leak caused by retain in add
+            return ref;
          }
 
          Iterator<MessageReference> iter = deliveringRefs.iterator();
@@ -818,6 +826,7 @@ public class ServerConsumerImpl implements ServerConsumer, ReadyListener {
                break;
             }
          }
+         ref.release();//willr3 added to avoid leak caused by retain in add
          return ref;
       }
    }
