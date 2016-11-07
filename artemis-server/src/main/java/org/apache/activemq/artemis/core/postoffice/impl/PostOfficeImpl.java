@@ -1272,7 +1272,13 @@ public class PostOfficeImpl implements PostOffice, NotificationListener, Binding
       private final List<MessageReference> refs;
 
       AddOperation(final List<MessageReference> refs) {
+
          this.refs = refs;
+         if(!refs.isEmpty()){
+            for(MessageReference ref : refs){
+               ref.retain(); // willr3 to offset the call to decrementRefCount in beforeRollback which calls release
+            }
+         }
       }
 
       public void afterCommit(final Transaction tx) {
