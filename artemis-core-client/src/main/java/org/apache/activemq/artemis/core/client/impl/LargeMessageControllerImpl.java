@@ -131,6 +131,9 @@ public class LargeMessageControllerImpl implements LargeMessageController {
 
    // Public --------------------------------------------------------
 
+   @Override
+   public boolean isPooled(){return false;}
+
    public void setLocal(boolean local) {
       this.local = local;
    }

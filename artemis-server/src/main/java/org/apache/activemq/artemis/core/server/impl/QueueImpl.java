@@ -1872,6 +1872,8 @@ public class QueueImpl implements Queue {
          if (handledconsumer != null) {
             proceedDeliver(handledconsumer, ref);
          }
+
+
       }
 
       checkDepage();

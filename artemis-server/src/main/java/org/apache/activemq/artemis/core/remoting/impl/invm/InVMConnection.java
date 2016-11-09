@@ -151,13 +151,20 @@ public class InVMConnection implements Connection {
       write(buffer, flush, batch, null);
    }
 
+
+
    public void write(final ActiveMQBuffer buffer,
                      final boolean flush,
                      final boolean batch,
                      final ChannelFutureListener futureListener) {
-      final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
 
-      copied.setIndex(buffer.readerIndex(), buffer.writerIndex());
+      //final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
+      final ActiveMQBuffer copied = ActiveMQBuffers.pooledBuffer(buffer.capacity());
+      int read = buffer.readerIndex();
+      int writ = buffer.writerIndex();
+      copied.writeBytes(buffer,read,writ-read);
+      copied.setIndex(read,writ);
+      buffer.setIndex(read,writ);
 
       try {
          executor.execute(new Runnable() {
@@ -183,6 +190,9 @@ public class InVMConnection implements Connection {
                finally {
                   if (isTrace) {
                      ActiveMQServerLogger.LOGGER.trace(InVMConnection.this + "::packet sent done");
+                  }
+                  if( copied.isPooled() && copied.byteBuf().refCnt() > 0 ){
+                     copied.byteBuf().release();
                   }
                }
             }

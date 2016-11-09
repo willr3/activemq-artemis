@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import org.apache.activemq.artemis.api.core.ActiveMQBuffer;
 import org.apache.activemq.artemis.api.core.ActiveMQBuffers;
 import org.apache.activemq.artemis.api.core.ActiveMQException;
@@ -76,9 +78,9 @@ public abstract class MessageImpl implements MessageInternal {
 
    protected byte priority;
 
-   protected ActiveMQBuffer buffer;
+   volatile protected ActiveMQBuffer buffer;
 
-   protected ResetLimitWrappedActiveMQBuffer bodyBuffer;
+   volatile protected ResetLimitWrappedActiveMQBuffer bodyBuffer;
 
    protected volatile boolean bufferValid;
 
@@ -274,7 +276,7 @@ public abstract class MessageImpl implements MessageInternal {
       byteBuf.readerIndex(getBodyBuffer().readerIndex());
       byteBuf.writerIndex(getBodyBuffer().writerIndex());
 
-      return new ResetLimitWrappedActiveMQBuffer(BODY_OFFSET, byteBuf, null);
+      return new ResetLimitWrappedActiveMQBuffer(BODY_OFFSET, byteBuf, null,this.buffer.isPooled());
    }
 
    public long getMessageID() {
@@ -404,12 +406,53 @@ public abstract class MessageImpl implements MessageInternal {
    }
 
    public void decodeFromBuffer(final ActiveMQBuffer buffer) {
-      this.buffer = buffer;
+      //willr3
+      ActiveMQBuffer newBuffer = buffer;
+      //newBuffer.byteBuf().retain();
+      if(buffer.isPooled()){
+         System.out.println("---------------\n"+ByteBufUtil.prettyHexDump(buffer.byteBuf())+"\n---------------\n");
+//         ByteBuf newNettyBuffer = Unpooled.buffer(buffer.byteBuf().capacity());
+         int read = buffer.byteBuf().readerIndex();
+         int writ = buffer.byteBuf().writerIndex();
+//
+         int readArt = buffer.readerIndex();
+         int writArt = buffer.writerIndex();
+//         buffer.byteBuf().readerIndex(0);
+//         buffer.byteBuf().readBytes(newNettyBuffer,0,buffer.byteBuf().capacity());
+//         buffer.byteBuf().setIndex(read,writ);
+//         newNettyBuffer.setIndex(read,writ);
+//
+//         newBuffer = new ChannelBufferWrapper(newNettyBuffer);
+
+
+
+         byte[] bytes = new byte[buffer.byteBuf().capacity()];
+         int readerIndex = buffer.byteBuf().readerIndex();
+         buffer.byteBuf().getBytes(0, bytes,0, buffer.capacity());
+
+         ByteBuf newNettyBuffer = Unpooled.wrappedBuffer(bytes);
+
+         buffer.byteBuf().setIndex(read,writ);
+         newNettyBuffer.setIndex(read,writ);
+
+
+         newBuffer = new ChannelBufferWrapper(newNettyBuffer);
+         buffer.setIndex(readArt,writArt);
+         newBuffer.setIndex(readArt,writArt);
+
+
+         System.out.println("---------------\n"+ByteBufUtil.prettyHexDump(newBuffer.byteBuf())+"\n---------------\n");
+         System.out.println("~~~~~~~"+buffer.byteBuf().compareTo(newBuffer.byteBuf())+"~~~~~~~");
+      }
+
+      this.buffer = newBuffer;
+
+
 
       decode();
 
       // Setting up the BodyBuffer based on endOfBodyPosition set from decode
-      ResetLimitWrappedActiveMQBuffer tmpbodyBuffer = new ResetLimitWrappedActiveMQBuffer(BODY_OFFSET, buffer, null);
+      ResetLimitWrappedActiveMQBuffer tmpbodyBuffer = new ResetLimitWrappedActiveMQBuffer(BODY_OFFSET, this.buffer, null);
       tmpbodyBuffer.readerIndex(BODY_OFFSET);
       tmpbodyBuffer.writerIndex(endOfBodyPosition);
       // only set this after the writer and reader is set,

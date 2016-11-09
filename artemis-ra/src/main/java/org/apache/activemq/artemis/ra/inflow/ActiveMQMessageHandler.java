@@ -281,6 +281,7 @@ public class ActiveMQMessageHandler implements MessageHandler, FailoverEventList
    }
 
    public void onMessage(final ClientMessage message) {
+
       if (ActiveMQMessageHandler.trace) {
          ActiveMQRALogger.LOGGER.trace("onMessage(" + message + ")");
       }
@@ -388,6 +389,10 @@ public class ActiveMQMessageHandler implements MessageHandler, FailoverEventList
             ActiveMQRALogger.LOGGER.unableToResetSession(activation.toString(), e);
             activation.startReconnectThread("Reset MessageHandler after Failure Thread");
          }
+//         if(message.getBodyBuffer().isPooled()){
+//            message.getBodyBuffer().byteBuf().release();
+//         }
+
       }
 
    }
