@@ -417,7 +417,8 @@ public abstract class MessageImpl implements MessageInternal {
 //
          int readArt = buffer.readerIndex();
          int writArt = buffer.writerIndex();
-//         buffer.byteBuf().readerIndex(0);
+
+         buffer.byteBuf().readerIndex(0);
 //         buffer.byteBuf().readBytes(newNettyBuffer,0,buffer.byteBuf().capacity());
 //         buffer.byteBuf().setIndex(read,writ);
 //         newNettyBuffer.setIndex(read,writ);
@@ -434,15 +435,15 @@ public abstract class MessageImpl implements MessageInternal {
 
          buffer.byteBuf().setIndex(read,writ);
          newNettyBuffer.setIndex(read,writ);
-
-
+//
+//
          newBuffer = new ChannelBufferWrapper(newNettyBuffer);
          buffer.setIndex(readArt,writArt);
          newBuffer.setIndex(readArt,writArt);
+//
+//         System.out.println("---------------\n"+ByteBufUtil.prettyHexDump(newBuffer.byteBuf())+"\n---------------\n");
+         System.out.println("zzzzzzzzzzz"+buffer.byteBuf().compareTo(newBuffer.byteBuf())+"zzzzzzzzzzz");
 
-
-         System.out.println("---------------\n"+ByteBufUtil.prettyHexDump(newBuffer.byteBuf())+"\n---------------\n");
-         System.out.println("~~~~~~~"+buffer.byteBuf().compareTo(newBuffer.byteBuf())+"~~~~~~~");
       }
 
       this.buffer = newBuffer;

@@ -160,11 +160,19 @@ public class InVMConnection implements Connection {
 
       //final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
       final ActiveMQBuffer copied = ActiveMQBuffers.pooledBuffer(buffer.capacity());
+      //final ActiveMQBuffer copied = ActiveMQBuffers.dynamicBuffer(buffer.capacity());
+
       int read = buffer.readerIndex();
       int writ = buffer.writerIndex();
-      copied.writeBytes(buffer,read,writ-read);
+      int readNetty = buffer.byteBuf().readerIndex();
+      int writNetty = buffer.byteBuf().writerIndex();
+
+      //copied.writeBytes(buffer,read,writ-read);
+      buffer.byteBuf().getBytes(0, copied.byteBuf(), 0, buffer.capacity());
       copied.setIndex(read,writ);
+      copied.byteBuf().setIndex(readNetty,writNetty);
       buffer.setIndex(read,writ);
+      buffer.byteBuf().setIndex(readNetty,writNetty);
 
       try {
          executor.execute(new Runnable() {
