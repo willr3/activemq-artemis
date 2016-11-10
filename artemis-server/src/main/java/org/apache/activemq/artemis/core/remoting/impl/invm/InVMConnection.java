@@ -134,7 +134,7 @@ public class InVMConnection implements Connection {
    }
 
    public ActiveMQBuffer createTransportBuffer(final int size) {
-      return ActiveMQBuffers.dynamicBuffer(size);
+      return ActiveMQBuffers.pooledDynamicBuffer(size);
    }
 
    public Object getID() {
@@ -185,6 +185,7 @@ public class InVMConnection implements Connection {
                   if (logger.isTraceEnabled()) {
                      logger.trace(InVMConnection.this + "::packet sent done");
                   }
+                  copied.release();
                }
             }
          });
