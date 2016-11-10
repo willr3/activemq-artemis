@@ -296,6 +296,12 @@ public class ScheduledDeliveryHandlerTest extends Assert {
       }
 
       @Override
+      public boolean release() {return false;}
+
+      @Override
+      public void retain() {}
+
+      @Override
       public long getMessageID() {
          return id;
       }

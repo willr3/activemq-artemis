@@ -16,12 +16,19 @@
  */
 package org.apache.activemq.artemis.core.server;
 
+import org.apache.activemq.artemis.api.core.ActiveMQBuffer;
+
 /**
  * A reference to a message.
  *
  * Channels store message references rather than the messages themselves.
  */
 public interface MessageReference {
+
+   boolean release();
+   void retain();
+
+
 
    boolean isPaged();
 

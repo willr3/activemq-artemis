@@ -134,7 +134,7 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
 
             if (buffer != null) {
                // release the buffer now
-               buffer.byteBuf().release();
+               buffer.release();//byteBuf().release();
             }
          }
          else {

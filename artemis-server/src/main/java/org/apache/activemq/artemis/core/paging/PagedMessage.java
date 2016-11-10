@@ -38,4 +38,7 @@ public interface PagedMessage extends EncodingSupport {
    void initMessage(StorageManager storageManager);
 
    long getTransactionID();
+
+   boolean release();
+   void retain();
 }

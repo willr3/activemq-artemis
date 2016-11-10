@@ -155,6 +155,16 @@ public class MessageReferenceImpl implements MessageReference {
       return alreadyAcked;
    }
 
+   @Override
+   public boolean release() {
+      return this.message.release();
+   }
+
+   @Override
+   public void retain() {
+      this.message.release();
+   }
+
    public boolean isPaged() {
       return false;
    }

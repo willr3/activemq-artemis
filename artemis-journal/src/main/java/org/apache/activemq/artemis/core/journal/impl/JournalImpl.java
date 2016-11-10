@@ -2321,7 +2321,7 @@ public class JournalImpl extends JournalBase implements TestableJournal, Journal
       }
       finally {
          // release it by first unwrap the unreleasable buffer and then release it.
-         buffer.byteBuf().unwrap().release();
+         buffer.release();//byteBuf().unwrap().release();
       }
    }
 

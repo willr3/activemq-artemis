@@ -77,6 +77,22 @@ public class PagedMessageImpl implements PagedMessage {
       return transactionID;
    }
 
+   @Override
+   public boolean release() {
+      boolean rtrn = false;
+      if( this.message!=null){
+         rtrn = this.message.release();
+      }
+      return false;
+   }
+
+   @Override
+   public void retain() {
+      if(this.message!=null){
+         this.message.retain();
+      }
+   }
+
    public long[] getQueueIDs() {
       return queueIDs;
    }

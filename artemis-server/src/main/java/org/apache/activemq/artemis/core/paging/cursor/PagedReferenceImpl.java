@@ -87,6 +87,16 @@ public class PagedReferenceImpl implements PagedReference {
       this.subscription = subscription;
    }
 
+   @Override
+   public boolean release() {
+      return this.getMessage().release();
+   }
+
+   @Override
+   public void retain() {
+      this.getMessage().retain();
+   }
+
    public boolean isPaged() {
       return true;
    }

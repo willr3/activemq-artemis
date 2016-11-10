@@ -169,6 +169,20 @@ public abstract class MessageImpl implements MessageInternal {
 
    // Message implementation ----------------------------------------
 
+   @Override
+   public boolean release(){
+      boolean rtrn = false;
+      if(this.buffer!=null){
+         rtrn = this.buffer.release();
+      }
+      return rtrn;
+   }
+   @Override
+   public void retain(){
+      if(this.buffer!=null){
+         this.buffer.retain();
+      }
+   }
    public int getEncodeSize() {
       int headersPropsSize = getHeadersAndPropertiesEncodeSize();
 

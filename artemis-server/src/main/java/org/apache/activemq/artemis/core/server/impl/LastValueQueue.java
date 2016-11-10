@@ -226,6 +226,22 @@ public class LastValueQueue extends QueueImpl {
          return ref.getPersistedCount();
       }
 
+      @Override
+      public boolean release() {
+         boolean rtrn = false;
+         if(this.ref!=null){
+            rtrn = this.ref.release();
+         }
+         return rtrn;
+      }
+
+      @Override
+      public void retain() {
+         if(this.ref!=null){
+            this.ref.retain();
+         }
+      }
+
       public boolean isPaged() {
          return false;
       }
