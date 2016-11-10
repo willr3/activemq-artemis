@@ -156,10 +156,11 @@ public class InVMConnection implements Connection {
                      final boolean flush,
                      final boolean batch,
                      final ChannelFutureListener futureListener) {
+      //willr3 TODO why must we make this defensive copy?
       final ActiveMQBuffer copied = buffer.copy(0, buffer.capacity());
 
       copied.setIndex(buffer.readerIndex(), buffer.writerIndex());
-
+      buffer.release();//mirror implicit release that occurs with Netty Channel.write
       try {
          executor.execute(new Runnable() {
             public void run() {
