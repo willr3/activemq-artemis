@@ -418,8 +418,11 @@ public abstract class MessageImpl implements MessageInternal {
    }
 
    public void decodeFromBuffer(final ActiveMQBuffer buffer) {
+      if(this.buffer!=null){
+         this.buffer.release();
+      }
       this.buffer = buffer;
-
+      this.buffer.retain();
       decode();
 
       // Setting up the BodyBuffer based on endOfBodyPosition set from decode
