@@ -52,8 +52,12 @@ public final class ResetLimitWrappedActiveMQBuffer extends ChannelBufferWrapper 
    public ResetLimitWrappedActiveMQBuffer(final int limit, final ByteBuf buffer, final MessageInternal message) {
       // a wrapped inside a wrapper will increase the stack size.
       // we fixed this here due to some profiling testing
-      super(buffer);
-
+      super(buffer,true);//willr3 default to releasable so we don't wrap a buffer with an unreleasable unpoolable
+      //willr3 TODO probably need to change this to a constructor argument
+      this.buffer.retain();
+      //calling retain here rather than in ChannelBufferWrapper because this class is not a pure ByteBuf wrapper and has a setBuffer method
+      //the setBuffer method implies the ResetLimitWrappedActiveMQBuffer is not the only owner for the buffers it wraps therefore it cannot assume to be the last reference to the byteBuf
+      //it must retain and release accordinly
       this.limit = limit;
 
       if (writerIndex() < limit) {
@@ -76,6 +80,7 @@ public final class ResetLimitWrappedActiveMQBuffer extends ChannelBufferWrapper 
          this.buffer.release();
       }
       this.buffer = buffer.byteBuf();
+      this.buffer.retain();
    }
 
    @Override
