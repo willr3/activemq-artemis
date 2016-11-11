@@ -60,7 +60,8 @@ public final class ResetLimitWrappedActiveMQBuffer extends ChannelBufferWrapper 
       // we fixed this here due to some profiling testing
       super(buffer,true);//willr3 default to releasable so we don't wrap a buffer with an unreleasable unpoolable
       //willr3 TODO probably need to change this to a constructor argument
-      this.buffer.retain();
+
+      //this.buffer.retain(); testing behavior if RLWAMBQ is not responsible for buffer retaining
       //calling retain here rather than in ChannelBufferWrapper because this class is not a pure ByteBuf wrapper and has a setBuffer method
       //the setBuffer method implies the ResetLimitWrappedActiveMQBuffer is not the only owner for the buffers it wraps therefore it cannot assume to be the last reference to the byteBuf
       //it must retain and release accordinly
@@ -83,10 +84,10 @@ public final class ResetLimitWrappedActiveMQBuffer extends ChannelBufferWrapper 
 
    public void setBuffer(final ActiveMQBuffer buffer) {
       if (this.buffer != null) {
-         this.buffer.release();
+         //this.buffer.release();
       }
       this.buffer = buffer.byteBuf();
-      this.buffer.retain();
+      //this.buffer.retain();
    }
 
    @Override
