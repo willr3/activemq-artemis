@@ -34,6 +34,10 @@ public final class ActiveMQBuffers {
       public AMQB(ByteBuf buf){
          super(buf,true);
       }
+      @Override
+      public boolean release(){ return super.release(); }
+      @Override
+      public void retain(){ super.retain(); }
    }
    /**
     * Creates a <em>self-expanding</em> ActiveMQBuffer with the given initial size
