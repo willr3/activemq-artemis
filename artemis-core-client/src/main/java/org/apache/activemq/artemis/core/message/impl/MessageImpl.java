@@ -432,6 +432,9 @@ public abstract class MessageImpl implements MessageInternal {
       // only set this after the writer and reader is set,
       // otherwise the buffer would be reset through the listener
       tmpbodyBuffer.setMessage(this);
+      if(this.bodyBuffer!=null){
+         this.bodyBuffer.release();
+      }
       this.bodyBuffer = tmpbodyBuffer;
 
 
