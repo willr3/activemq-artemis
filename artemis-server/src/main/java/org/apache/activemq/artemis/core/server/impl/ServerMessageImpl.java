@@ -120,7 +120,8 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
             pagingStore.addSize(MessageReferenceImpl.getMemoryEstimate());
          }
       }
-
+      this.retain();//called each time because this method should be called for each new MessageReference
+      //willr3 seems odd that this method is not baked into the MessageReference class but oh well
       return count;
    }
 
@@ -136,13 +137,13 @@ public class ServerMessageImpl extends MessageImpl implements ServerMessage {
 //               // release the buffer now
 //               buffer.release();//byteBuf().release();
 //            }
-            this.release();
+
          }
          else {
             pagingStore.addSize(-MessageReferenceImpl.getMemoryEstimate());
          }
       }
-
+      this.release(); // call every time because we need to retain the buffer for each MessageReference
       return count;
    }
 
