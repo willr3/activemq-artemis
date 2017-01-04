@@ -153,8 +153,7 @@ public class InVMConnection implements Connection {
    public ActiveMQBuffer createTransportBuffer(final int size, boolean pooled) {
       if ( pooled ) {
          return ActiveMQBuffers.pooledBuffer( size );
-      }
-      else {
+      } else {
          return ActiveMQBuffers.dynamicBuffer( size );
       }
    }
