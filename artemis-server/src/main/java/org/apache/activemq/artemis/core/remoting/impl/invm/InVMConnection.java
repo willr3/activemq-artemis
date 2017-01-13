@@ -214,9 +214,10 @@ public class InVMConnection implements Connection {
                   if (logger.isTraceEnabled()) {
                      logger.trace(InVMConnection.this + "::packet sent done");
                   }
-                  if ( copied.byteBuf().refCnt() > 0 ) {
-                     copied.release();
-                  }
+                  copied.release();
+//                  if ( copied.byteBuf().refCnt() > 0 ) {
+//                     copied.release();
+//                  }
                }
             }
          });
